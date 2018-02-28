@@ -1,0 +1,38 @@
+<div class="container">
+  <div class="row mb-3">
+    <div class="col">
+      <h1>Búsqueda</h1>
+      <hr>
+      <span class="ui-inputgroup-addon"><i class="fa fa-search"></i></span>
+      <p-autoComplete [(ngModel)]="<%= entidad.uncapitalize %>Encontrad<% if(entidad.isFemenino){ %>a<% } else{ %>o<% } %>" [suggestions]="resultado<%= entidad.pluralizeCapitalize %>Encontrad<% if(entidad.isFemenino){ %>a<% } else{ %>o<% } %>s"
+        (completeMethod)="busquedaDeSugerencias<%= entidad.capitalize %>($event)" field="<% Object.keys(entidad.entity).forEach(function(field) { %><% if(entidad.entity[field].sugerencia) { %><%= field %><% } %><% }) %>"
+        (onSelect)="actualizar<%= entidad.capitalize %>CrudDesdeBusqueda($event)"
+        [forceSelection]="true" [dropdown]="true"></p-autoComplete>
+    </div>
+  </div>
+  <div class="row my-2">
+    <div class="col">
+      <p-table [value]="resultado<%= entidad.pluralizeCapitalize %>Encontrad<% if(entidad.isFemenino){ %>a<% } else{ %>o<% } %>s" [responsive]="true"
+        [scrollable]="true" scrollHeight="400px" dataKey="id"
+        selectionMode="single"
+        (onRowSelect)="actualizar<%= entidad.capitalize %>CrudDesdeTablaSeleccion($event)"
+        (onRowUnselect)="actualizar<%= entidad.capitalize %>CrudDesdeTablaDeseleccion($event)">
+        <ng-template pTemplate="header">
+            <tr><% Object.keys(entidad.entity).forEach(function(field) { %><% if(entidad.entity[field].visible) { %><th><%= field %></th><% } %><% }) %></tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-<%= entidad.uncapitalize %>>
+            <tr [pSelectableRow]="rowData">
+                <% Object.keys(entidad.entity).forEach(function(field) { %><% if(entidad.entity[field].visible) { %><td><span class="ui-column-title"><%= field %></span>{{<%= entidad.uncapitalize %>.<%= field %>}}</td>
+                <% } %><% }) %>
+            </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <div class="col-4">
+      <app-crud-<%= entidad.uncapitalize %> [<%= entidad.uncapitalize %>]="<%= entidad.uncapitalize %>Crud | async"
+                (<%= entidad.uncapitalize %>Crear)="agregar<%= entidad.capitalize %>EnTabla($event)"
+                (<%= entidad.uncapitalize %>Eliminar)="eliminar<%= entidad.capitalize %>EnTabla($event)"
+                (<%= entidad.uncapitalize %>Actualizar)="actualizar<%= entidad.capitalize %>EnTabla($event)"></app-crud-<%= entidad.uncapitalize %>>
+    </div>
+  </div>
+</div>

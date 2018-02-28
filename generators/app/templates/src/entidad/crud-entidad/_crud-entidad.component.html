@@ -1,0 +1,46 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <form [formGroup]='formularioDetalle<%= entidad.capitalize %>'>
+        <% Object.keys(entidad.entity).forEach(function(campo) { %><% if (!entidad.entity[campo].model) { %>
+        <div class="form-group">
+          <label class="col-form-label" translate><%= campo %></label>
+          <% if (entidad.entity[campo].type === 'string') { %><input class="form-control" formControlName="<%= campo %>" type="text" pInputText/><% } else if(entidad.entity[campo].type === 'boolean') { %><input type="checkbox" formControlName="<%= campo %>">
+          <% } %>
+          <span hidden translate><%= campo %></span>
+          <small [hidden]="formularioDetalle<%= entidad.capitalize %>.controls.<%= campo %>.valid || formularioDetalle<%= entidad.capitalize %>.controls.<%= campo %>.untouched"
+                  class="text-danger" translate>
+            <%= campo %> es requerido
+          </small>
+        </div>
+        <% } %><% }) %>
+        <% relaciones.forEach(function(entidadRelacion) { %>
+        <div class="form-group">
+          <label class="col-form-label" translate><%= entidadRelacion.capitalize %></label>
+          <br>
+          <span class="ui-fluid"> <!-- Hacer ancho 100% el autoComplete-->
+          <p-autoComplete [(ngModel)]="<%= entidadRelacion.uncapitalize %>Seleccionad<% if(entidadRelacion.isFemenino){ %>a<% } else { %>o<% } %>" formControlName="<%= entidadRelacion.uncapitalize %>"
+            [suggestions]="resultado<%= entidadRelacion.pluralizeCapitalize %>Encontrad<% if(entidadRelacion.isFemenino){ %>a<% } else { %>o<% } %>s" field="<% Object.keys(entidadRelacion.entity).forEach(function(field) { %><% if(entidadRelacion.entity[field].sugerencia) { %><%= field %><% } %><% }) %>"
+            (completeMethod)="busquedaDeSugerencias<%= entidadRelacion.capitalize %>($event)"></p-autoComplete>
+          <span hidden translate><%= entidadRelacion.capitalize %></span>
+          </span>
+          <small [hidden]="formularioDetalle<%= entidad.capitalize %>.controls.<%= entidadRelacion.uncapitalize %>.valid || formularioDetalle<%= entidad.capitalize %>.controls.<%= entidadRelacion.uncapitalize %>.untouched"
+                  class="text-danger" translate>
+          <%= entidadRelacion.capitalize %> es requerido
+          </small>
+        </div>
+        <% }) %>
+        <button class="btn btn-info btn-sm btn-block" [hidden]="(<%= entidad.uncapitalize %> | async)"
+                [disabled]="formularioDetalle<%= entidad.capitalize %>.invalid"
+                (click)="crear<%= entidad.capitalize %>(formularioDetalle<%= entidad.capitalize %>.value)" translate>Agregar</button>
+        <button class="btn btn-success btn-sm btn-block" [hidden]="!(<%= entidad.uncapitalize %> | async)"
+                [disabled]="formularioDetalle<%= entidad.capitalize %>.invalid"
+                (click)="actualizar<%= entidad.capitalize %>(formularioDetalle<%= entidad.capitalize %>.value)" translate>Actualizar</button>
+        <button class="btn btn-danger btn-sm btn-block" [hidden]="!(<%= entidad.uncapitalize %> | async)"
+                (click)="eliminar<%= entidad.capitalize %>(formularioDetalle<%= entidad.capitalize %>.value)" translate>Eliminar</button>
+        <button class="btn btn-info btn-sm btn-block" [hidden]="!(<%= entidad.uncapitalize %> | async)"
+                (click)="limpiar<%= entidad.capitalize %>()" translate>Nuevo</button>
+      </form>
+    </div>
+  </div>
+</div>
