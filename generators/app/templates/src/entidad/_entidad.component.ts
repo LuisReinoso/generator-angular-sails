@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { Logger } from '@app/core';
 import { of } from 'rxjs/observable/of';
 import { remove } from 'lodash';
+import { MessageService } from 'primeng/components/common/messageservice';
 
 const log = new Logger('<%= entidad.capitalize %>');
 
@@ -21,7 +22,10 @@ export class <%= entidad.capitalize %>Component implements OnInit {
   <%= entidad.uncapitalize %>Encontrad<% if(entidad.isFemenino){ %>a<% } else{ %>o<% } %>: I<%= entidad.capitalize %>;
   resultado<%= entidad.pluralizeCapitalize %>Encontrad<% if(entidad.isFemenino){ %>a<% } else{ %>o<% } %>s: I<%= entidad.capitalize %>[];
 
-  constructor(private <%= entidad.uncapitalize %>Service: <%= entidad.capitalize %>Service) {
+  constructor(
+    private <%= entidad.uncapitalize %>Service: <%= entidad.capitalize %>Service,
+    private mensajesService: MessageService
+  ) {
     this.<%= entidad.uncapitalize %>Crud = null;
     this.resultado<%= entidad.pluralizeCapitalize %>Encontrad<% if(entidad.isFemenino){ %>a<% } else{ %>o<% } %>s = [];
   }
@@ -29,17 +33,30 @@ export class <%= entidad.capitalize %>Component implements OnInit {
   ngOnInit() {
   }
 
-  busquedaDeSugerencias<%= entidad.capitalize %>(evento: IEventoAutoCompletado ) {
+  busquedaDeSugerencias<%= entidad.capitalize %>(evento: IEventoAutoCompletado) {
     this.<%= entidad.uncapitalize %>Service.buscar<%= entidad.pluralizeCapitalize %>(evento.query)
       .pipe(map(res => res.json()))
       .subscribe(
         data => {
           if (data.registros) {
-            console.log(data.registros);
             this.resultado<%= entidad.pluralizeCapitalize %>Encontrad<% if(entidad.isFemenino){ %>a<% } else{ %>o<% } %>s = data.registros;
           } else {
             this.resultado<%= entidad.pluralizeCapitalize %>Encontrad<% if(entidad.isFemenino){ %>a<% } else{ %>o<% } %>s = [];
+            this.mensajesService.add({
+              severity: 'info',
+              summary: 'Búsqueda <%= entidad.capitalize %>',
+              detail: 'No se ha encontrado <%= entidad.capitalize %>'
+            });
           }
+        },
+        error => {
+          const errorRespuesta = JSON.parse(error._body);
+          log.error(errorRespuesta);
+          this.mensajesService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: errorRespuesta.mensaje
+          });
         }
       );
   }

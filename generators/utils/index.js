@@ -59,6 +59,33 @@ let getRelations = (entity, entities) => {
   return referenciaCompleta;
 };
 
+let getColecciones = (entity, entities) => {
+  let referencias = [];
+
+  // Obtengo los nombres de las referencias
+  Object.keys(entity.entity).forEach(field => {
+    if (entity.entity[field].collection) {
+      referencias.push(entity.entity[field].collection);
+    }
+  });
+
+  let referenciaCompleta = [];
+
+  for (let indice = 0; indice < referencias.length; indice++) {
+    const nombreReferencia = referencias[indice];
+
+    let auxReferenciaCompleta = entities.filter(entidad => {
+      return entidad.name === nombreReferencia;
+    });
+
+    if (auxReferenciaCompleta.length === 1) {
+      referenciaCompleta = referenciaCompleta.concat(auxReferenciaCompleta);
+    }
+  }
+
+  return referenciaCompleta;
+};
+
 let getEntities = (models, except) => {
   // Get the entities (All the keys of the model json) except
   // no entities like relativeURI
@@ -94,5 +121,6 @@ let getEntities = (models, except) => {
 
 module.exports = {
   getEntities: getEntities,
-  getRelations: getRelations
+  getRelations: getRelations,
+  getColecciones: getColecciones
 };

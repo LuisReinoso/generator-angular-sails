@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col">
       <form [formGroup]='formularioDetalle<%= entidad.capitalize %>'>
-        <% Object.keys(entidad.entity).forEach(function(campo) { %><% if (!entidad.entity[campo].model) { %>
+        <% Object.keys(entidad.entity).forEach(function(campo) { %><% if (!entidad.entity[campo].model && !entidad.entity[campo].collection) { %>
         <div class="form-group">
           <label class="col-form-label" translate><%= campo %></label>
           <% if (entidad.entity[campo].type === 'string') { %><input class="form-control" formControlName="<%= campo %>" type="text" pInputText/><% } else if(entidad.entity[campo].type === 'boolean') { %><input type="checkbox" formControlName="<%= campo %>">
@@ -30,6 +30,28 @@
           </small>
         </div>
         <% }) %>
+        <% colecciones.forEach(function(entidadColeccion) { %>
+        <div class="form-group" [hidden]="!(<%= entidad.uncapitalize %> | async)">
+          <label class="col-form-label" translate><%= entidadColeccion.capitalize %></label>
+          <br>
+          <table class="table table-hover">
+            <thead class="thead-default">
+            <!-- TODO: Separar etiquetas th y td -->
+            <tr>
+              <% Object.keys(entidadColeccion.entity).forEach(function(field) { %><% if(entidadColeccion.entity[field].visible) { %><th translate><%= field %></th><% } %><% }) %>
+            </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let <%= entidadColeccion.uncapitalize %> of <%= entidadColeccion.pluralizeUncapitalize %>; let indice=index" (dblclick)="seleccionar<%= entidadColeccion.capitalize %>DesdeRelacion(indice)">
+                <% Object.keys(entidadColeccion.entity).forEach(function(field) { %><% if(entidadColeccion.entity[field].visible) { %><td>{{<%= entidadColeccion.uncapitalize %>.<%= field %>}}</td><% } %><% }) %>
+              </tr>
+            </tbody>
+          </table>
+          <button type="button" class="btn btn-info btn-sm btn-block"
+                    (click)="crear<%= entidadColeccion.capitalize %>DesdeRelacion()"
+                    [hidden]="!(<%= entidad.uncapitalize %> | async)" translate>Crear <%= entidadColeccion.uncapitalize %></button>
+        </div>
+        <% }) %>
         <button class="btn btn-info btn-sm btn-block" [hidden]="(<%= entidad.uncapitalize %> | async)"
                 [disabled]="formularioDetalle<%= entidad.capitalize %>.invalid"
                 (click)="crear<%= entidad.capitalize %>(formularioDetalle<%= entidad.capitalize %>.value)" translate>Agregar</button>
@@ -44,3 +66,11 @@
     </div>
   </div>
 </div>
+<% colecciones.forEach(function(entidadColeccion) { %>
+<p-dialog header="<%= entidadColeccion.capitalize %>" [(visible)]="isCrud<%= entidadColeccion.capitalize %>Visible">
+  <app-crud-<%= entidadColeccion.uncapitalize %> [<%= entidadColeccion.uncapitalize %>]="<%= entidadColeccion.uncapitalize %>Seleccionad<% if(entidadColeccion.isFemenino){ %>a<% } else{ %>o<% } %>" [(<%= entidad.uncapitalize %>)]="<%= entidad.uncapitalize %>Seleccionad<% if(entidad.isFemenino){ %>a<% } else{ %>o<% } %>"
+    (<%= entidadColeccion.uncapitalize %>Crear)="agregar<%= entidadColeccion.capitalize %>EnTabla($event)"
+    (<%= entidadColeccion.uncapitalize %>Eliminar)="eliminar<%= entidadColeccion.capitalize %>EnTabla($event)"
+    (<%= entidadColeccion.uncapitalize %>Actualizar)="actualizar<%= entidadColeccion.capitalize %>EnTabla($event)"></app-crud-<%= entidadColeccion.uncapitalize %>>
+</p-dialog>
+<% }) %>

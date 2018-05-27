@@ -65,13 +65,6 @@ module.exports = class extends Generator {
       );
 
       this.fs.copyTpl(
-        this.templatePath('src/entidad/_entidad.component.scss'),
-        this.destinationPath(
-          `src/${entidad.uncapitalize}/${entidad.uncapitalize}.component.scss`
-        )
-      );
-
-      this.fs.copyTpl(
         this.templatePath('src/entidad/_entidad.component.spec.ts'),
         this.destinationPath(
           `src/${entidad.uncapitalize}/${entidad.uncapitalize}.component.spec.ts`
@@ -85,16 +78,6 @@ module.exports = class extends Generator {
         this.templatePath('src/entidad/_entidad.component.ts'),
         this.destinationPath(
           `src/${entidad.uncapitalize}/${entidad.uncapitalize}.component.ts`
-        ),
-        {
-          entidad: entidad
-        }
-      );
-
-      this.fs.copyTpl(
-        this.templatePath('src/entidad/_entidad.module.ts'),
-        this.destinationPath(
-          `src/${entidad.uncapitalize}/${entidad.uncapitalize}.module.ts`
         ),
         {
           entidad: entidad
@@ -122,6 +105,20 @@ module.exports = class extends Generator {
       );
 
       var relaciones = utils.getRelations(entidad, entidades);
+      var colecciones = utils.getColecciones(entidad, entidades);
+      console.log(relaciones);
+      console.log(colecciones);
+
+      this.fs.copyTpl(
+        this.templatePath('src/entidad/_entidad.module.ts'),
+        this.destinationPath(
+          `src/${entidad.uncapitalize}/${entidad.uncapitalize}.module.ts`
+        ),
+        {
+          entidad: entidad,
+          colecciones: colecciones
+        }
+      );
 
       this.fs.copyTpl(
         this.templatePath('src/entidad/crud-entidad/_crud-entidad.component.html'),
@@ -132,7 +129,8 @@ module.exports = class extends Generator {
         ),
         {
           entidad: entidad,
-          relaciones: relaciones
+          relaciones: relaciones,
+          colecciones: colecciones
         }
       );
 
@@ -145,20 +143,8 @@ module.exports = class extends Generator {
         ),
         {
           entidad: entidad,
-          relaciones: relaciones
-        }
-      );
-
-      this.fs.copyTpl(
-        this.templatePath('src/entidad/crud-entidad/_crud-entidad.component.scss'),
-        this.destinationPath(
-          `src/${entidad.uncapitalize}/crud-${entidad.uncapitalize}/crud-${
-            entidad.uncapitalize
-          }.component.scss`
-        ),
-        {
-          entidad: entidad,
-          relaciones: relaciones
+          relaciones: relaciones,
+          colecciones: colecciones
         }
       );
 
@@ -171,7 +157,8 @@ module.exports = class extends Generator {
         ),
         {
           entidad: entidad,
-          relaciones: relaciones
+          relaciones: relaciones,
+          colecciones: colecciones
         }
       );
 
@@ -184,7 +171,8 @@ module.exports = class extends Generator {
         ),
         {
           entidad: entidad,
-          relaciones: relaciones
+          relaciones: relaciones,
+          colecciones: colecciones
         }
       );
 

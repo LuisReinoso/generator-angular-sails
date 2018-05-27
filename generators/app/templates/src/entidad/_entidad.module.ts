@@ -9,6 +9,12 @@ import { Crud<%= entidad.capitalize %>Component } from './crud-<%= entidad.uncap
 
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { TableModule } from 'primeng/table';
+import { DialogModule } from 'primeng/dialog';
+import { MessageService } from 'primeng/components/common/messageservice';
+
+<% colecciones.forEach(function(entidadColeccion) { %>
+import { <%= entidadColeccion.capitalize %>Module } from '@app/administracion/<%= entidadColeccion.uncapitalize %>/<%= entidadColeccion.uncapitalize %>.module';
+<% }) %>
 
 @NgModule({
   imports: [
@@ -18,11 +24,21 @@ import { TableModule } from 'primeng/table';
     ReactiveFormsModule,
     <%= entidad.capitalize %>RoutingModule,
     AutoCompleteModule,
-    TableModule
+    TableModule,
+    <% colecciones.forEach(function(entidadColeccion) { %>
+    <%= entidadColeccion.capitalize %>Module,
+    <% }) %>
+    DialogModule
   ],
   declarations: [
     <%= entidad.capitalize %>Component,
     Crud<%= entidad.capitalize %>Component
+  ],
+  exports: [
+    Crud<%= entidad.capitalize %>Component
+  ],
+  providers: [
+    MessageService
   ]
 })
 export class <%= entidad.capitalize %>Module { }

@@ -11,7 +11,7 @@
     </div>
   </div>
   <div class="row my-2">
-    <div class="col">
+    <div class="col-md-8">
       <p-table [value]="resultado<%= entidad.pluralizeCapitalize %>Encontrad<% if(entidad.isFemenino){ %>a<% } else{ %>o<% } %>s" [responsive]="true"
         [scrollable]="true" scrollHeight="400px" dataKey="id"
         selectionMode="single"
@@ -28,7 +28,7 @@
         </ng-template>
       </p-table>
     </div>
-    <div class="col-4">
+    <div class="col-md-4">
       <app-crud-<%= entidad.uncapitalize %> [<%= entidad.uncapitalize %>]="<%= entidad.uncapitalize %>Crud | async"
                 (<%= entidad.uncapitalize %>Crear)="agregar<%= entidad.capitalize %>EnTabla($event)"
                 (<%= entidad.uncapitalize %>Eliminar)="eliminar<%= entidad.capitalize %>EnTabla($event)"
