@@ -23,6 +23,9 @@ yo angular-sails
  * Yeoman can be too opinionated at times but is easily convinced not to be.
  * Feel free to [learn more about Yeoman](http://yeoman.io/).
 
+## Basado en:
+[https://github.com/gorums/generator-angular-2-crud](https://github.com/gorums/generator-angular-2-crud)
+
 ## License
 
 MIT © [Luis Reinoso]()
